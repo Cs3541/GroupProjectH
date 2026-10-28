@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "971071177789",
-    "project_id": "cs3541-grouphproject",
-    "storage_bucket": "cs3541-grouphproject.firebasestorage.app"
+    "project_number": "398114972447",
+    "project_id": "get-fit-c002a",
+    "storage_bucket": "get-fit-c002a.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:971071177789:android:9c639d08a1bdf09b985654",
+        "mobilesdk_app_id": "1:398114972447:android:3018cb6a22fbb1537b062a",
         "android_client_info": {
           "package_name": "com.example.get_fit"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDhJHLOS_AdEMtMXcsX_247oFTxQq_r14Y"
+          "current_key": "AIzaSyDOn7dO9UkJZLzLy8PZtfbwnthyT_SdUAA"
         }
       ],
       "services": {
