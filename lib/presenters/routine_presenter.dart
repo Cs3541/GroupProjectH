@@ -1,7 +1,7 @@
 import '../models/routine_model.dart';
 
 class RoutinePresenter {
-  final List<Routine> _routines = [
+  static final List<Routine> _routines = [
     Routine(
       id: 'full_body',
       name: 'Full Body Workout',
@@ -16,6 +16,14 @@ class RoutinePresenter {
 
   List<Routine> getAllRoutines() {
     return List.unmodifiable(_routines);
+  }
+
+  Routine addRoutine(String name) {
+    var id = name.trim().toLowerCase();
+
+    final routine = Routine(id: id, name: name.trim(), exerciseIds: []);
+    _routines.add(routine);
+    return routine;
   }
 
   Routine? getRoutineById(String id) {

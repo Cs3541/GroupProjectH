@@ -4,9 +4,14 @@ import '../models/routine_model.dart';
 import '../presenters/routine_presenter.dart';
 import 'routine_screen.dart';
 
-class RoutineListScreen extends StatelessWidget {
-  RoutineListScreen({super.key});
+class RoutineListScreen extends StatefulWidget {
+  const RoutineListScreen({super.key});
 
+  @override
+  State<RoutineListScreen> createState() => _RoutineListScreenState();
+}
+
+class _RoutineListScreenState extends State<RoutineListScreen> {
   final RoutinePresenter _presenter = RoutinePresenter();
 
   @override
@@ -19,8 +24,16 @@ class RoutineListScreen extends StatelessWidget {
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(16),
-        itemCount: routines.length,
+        itemCount: routines.length + 1,
         itemBuilder: (context, index) {
+          if (index == routines.length) {
+            return OutlinedButton.icon(
+              onPressed: () => _showAddRoutineDialog(context),
+              icon: const Icon(Icons.add),
+              label: const Text('Add Routine'),
+            );
+          }
+
           final routine = routines[index];
 
           return Card(
@@ -47,50 +60,38 @@ class RoutineListScreen extends StatelessWidget {
     );
   }
 
-  /*void _showRoutineDetails(
-    BuildContext context,
-    Routine routine,
-  ) {
-    showDialog<void>(
+  Future<void> _showAddRoutineDialog(BuildContext context) async {
+    var input = '';
+
+    final name = await showDialog<String>(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(routine.name),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Exercises',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              ...routine.exerciseIds.map(
-                (id) => Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: Text(
-                    id
-                        .split('_')
-                        .map(
-                          (word) => word[0].toUpperCase() +
-                              word.substring(1),
-                        )
-                        .join(' '),
-                  ),
-                ),
-              ),
-            ],
+          title: const Text('New Routine'),
+          content: TextField(
+            autofocus: true,
+            decoration: const InputDecoration(labelText: 'Routine name'),
+            onChanged: (value) => input = value,
+            onSubmitted: (value) => Navigator.pop(context, value),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Close'),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, input),
+              child: const Text('Add'),
             ),
           ],
         );
       },
     );
-  }*/
+
+    if (name == null || name.trim().isEmpty) return;
+
+    setState(() {
+      _presenter.addRoutine(name);
+    });
+  }
 }
