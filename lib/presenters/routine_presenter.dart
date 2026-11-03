@@ -26,6 +26,10 @@ class RoutinePresenter {
     return routine;
   }
 
+  void deleteRoutine(String id) {
+    _routines.removeWhere((routine) => routine.id == id);
+  }
+
   Routine? getRoutineById(String id) {
     for (final routine in _routines) {
       if (routine.id == id) {

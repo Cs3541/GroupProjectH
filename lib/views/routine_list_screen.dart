@@ -47,11 +47,12 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
                 '${routine.exerciseIds.length} exercises',
               ),
               trailing: const Icon(Icons.chevron_right),
-              onTap: () {
-                Navigator.push(
+              onTap: () async {
+                await Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => RoutineScreen(routineId: routine.id)),
                 );
+                if (mounted) setState(() {});
               },
             ),
           );

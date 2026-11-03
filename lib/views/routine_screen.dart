@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../presenters/routine_presenter.dart';
 import '../presenters/exercise_presenter.dart';
+import 'confirm_delete_dialog.dart';
 
 class RoutineScreen extends StatelessWidget {
   final String routineId;
@@ -34,6 +35,18 @@ class RoutineScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(routine.name),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.delete),
+            tooltip: 'Delete routine',
+            onPressed: () async {
+              if (await confirmDeleteRoutine(context, routine)) {
+                routinePresenter.deleteRoutine(routine.id);
+                if (context.mounted) Navigator.pop(context);
+              }
+            },
+          ),
+        ],
       ),
       body: exercises.isEmpty
           ? const Center(
