@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import '../presenters/routine_presenter.dart';
-import '../presenters/exercise_presenter.dart';
 import 'confirm_delete_dialog.dart';
 
-class RoutineScreen extends StatelessWidget {
+class RoutineScreen extends StatefulWidget {
   final String routineId;
 
   const RoutineScreen({
@@ -12,11 +11,21 @@ class RoutineScreen extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final routinePresenter = RoutinePresenter();
-    final exercisePresenter = ExercisePresenter();
+  State<RoutineScreen> createState() => _RoutineScreenState();
+}
 
-    final routine = routinePresenter.getRoutineById(routineId);
+class _RoutineScreenState extends State<RoutineScreen> {
+  final RoutinePresenter _routinePresenter = RoutinePresenter();
+
+  void _addSampleWorkout() {
+    setState(() {
+      _routinePresenter.addWorkoutToRoutine(widget.routineId, 'Sample Workout');
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final routine = _routinePresenter.getRoutineById(widget.routineId);
 
     if (routine == null) {
       return Scaffold(
@@ -27,10 +36,7 @@ class RoutineScreen extends StatelessWidget {
       );
     }
 
-    final exercises = routine.exerciseIds
-        .map((id) => exercisePresenter.getExerciseById(id))
-        .whereType<dynamic>()
-        .toList();
+    final workouts = routine.workoutNames;
 
     return Scaffold(
       appBar: AppBar(
@@ -41,40 +47,34 @@ class RoutineScreen extends StatelessWidget {
             tooltip: 'Delete routine',
             onPressed: () async {
               if (await confirmDeleteRoutine(context, routine)) {
-                routinePresenter.deleteRoutine(routine.id);
+                _routinePresenter.deleteRoutine(routine.id);
                 if (context.mounted) Navigator.pop(context);
               }
             },
           ),
         ],
       ),
-      body: exercises.isEmpty
-          ? const Center(
-              child: Text('No exercises in this routine.'),
-            )
-          : ListView.builder(
-              itemCount: exercises.length,
-              itemBuilder: (context, index) {
-                final exercise = exercises[index];
+      body: ListView.builder(
+        // One extra item at the end for the add button.
+        itemCount: workouts.length + 1,
+        itemBuilder: (context, index) {
+          if (index == workouts.length) {
+            return Padding(
+              padding: const EdgeInsets.all(16),
+              child: OutlinedButton.icon(
+                onPressed: _addSampleWorkout,
+                icon: const Icon(Icons.add),
+                label: const Text('Add workout'),
+              ),
+            );
+          }
 
-                return ListTile(
-                  leading: const Icon(Icons.fitness_center),
-                  title: Text(exercise.name),
-                  subtitle: Text([
-                    if (exercise.sets != null)
-                      '${exercise.sets} sets',
-                    if (exercise.reps != null)
-                      '${exercise.reps} reps',
-                    if (exercise.weight != null)
-                      '${exercise.weight} lb',
-                    if (exercise.duration != null)
-                      '${exercise.duration} seconds',
-                    if (exercise.distance != null)
-                      '${exercise.distance} meters',
-                  ].join(' • ')),
-                );
-              },
-            ),
+          return ListTile(
+            leading: const Icon(Icons.fitness_center),
+            title: Text(workouts[index]),
+          );
+        },
+      ),
     );
   }
 }

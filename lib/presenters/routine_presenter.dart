@@ -5,12 +5,12 @@ class RoutinePresenter {
     Routine(
       id: 'full_body',
       name: 'Full Body Workout',
-      exerciseIds: ['bench_press', 'squat', 'plank'],
+      workoutNames: ['bench_press', 'squat', 'plank'],
     ),
     Routine(
       id: 'cardio',
       name: 'Cardio Routine',
-      exerciseIds: ['running'],
+      workoutNames: ['running'],
     ),
   ];
 
@@ -21,13 +21,17 @@ class RoutinePresenter {
   Routine addRoutine(String name) {
     var id = name.trim().toLowerCase();
 
-    final routine = Routine(id: id, name: name.trim(), exerciseIds: []);
+    final routine = Routine(id: id, name: name.trim(), workoutNames: []);
     _routines.add(routine);
     return routine;
   }
 
   void deleteRoutine(String id) {
     _routines.removeWhere((routine) => routine.id == id);
+  }
+
+  void addWorkoutToRoutine(String routineId, String workoutName) {
+    getRoutineById(routineId)?.workoutNames.add(workoutName);
   }
 
   Routine? getRoutineById(String id) {
