@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../home_screen.dart';
 import 'log_workout_screen.dart';
-import 'routines_screen.dart';
+import 'routine_list_screen.dart';
 import 'progress_screen.dart';
 
 class MainNavigationScreen extends StatefulWidget {
@@ -28,7 +28,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         children: [
           HomeScreen(onNavigate: _onItemTapped),
           const LogWorkoutScreen(),
-          const RoutinesScreen(),
+          const RoutineListScreen(),
           const ProgressScreen(),
         ],
       ),

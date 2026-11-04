@@ -1,20 +1,28 @@
-// planned exercise in a routine
-class RoutineExercise {
-  final String name;
-  final int targetSets;
-  final int targetReps;
-
-  const RoutineExercise({
-    required this.name,
-    this.targetSets = 3,
-    this.targetReps = 10,
-  });
-}
-
-// Template
 class Routine {
+  final String id;
   final String name;
-  final List<RoutineExercise> exercises;
+  final List<String> workoutNames;
 
-  const Routine({required this.name, this.exercises = const []});
+  Routine({
+    required this.id,
+    required this.name,
+    required this.workoutNames,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'workoutNames': workoutNames,
+    };
+  }
+
+  factory Routine.fromMap(Map<String, dynamic> map) {
+    return Routine(
+      id: map['id'],
+      name: map['name'],
+      workoutNames: List<String>.from(map['workoutNames']),
+    );
+  }
+  
 }

@@ -14,7 +14,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final workouts = WorkoutPresenter.instance;
-    final routines = RoutinePresenter.instance;
+    final routines = RoutinePresenter();
 
     return Scaffold(
       appBar: AppBar(
@@ -25,7 +25,7 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: appColor,
       ),
       body: ListenableBuilder(
-        listenable: Listenable.merge([workouts, routines]),
+        listenable: workouts,
         builder: (context, _) {
           return ListView(
             padding: const EdgeInsets.all(16),
@@ -48,7 +48,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                   _StatCard(
                     label: 'Routines',
-                    value: '${routines.routines.length}',
+                    value: '${routines.getAllRoutines().length}',
                   ),
                 ],
               ),
