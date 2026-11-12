@@ -44,7 +44,7 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
               ),
               title: Text(routine.name),
               subtitle: Text(
-                '${routine.workoutNames.length} exercises',
+                '${routine.exercises.length} exercises',
               ),
               trailing: const Icon(Icons.chevron_right),
               onTap: () async {

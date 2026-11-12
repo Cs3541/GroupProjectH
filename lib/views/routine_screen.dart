@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import '../presenters/routine_presenter.dart';
+import '../presenters/exercise_presenter.dart';
+import '../models/exercise_model.dart';
 import 'confirm_delete_dialog.dart';
+import 'exercise_list_screen.dart';
 
 class RoutineScreen extends StatefulWidget {
   final String routineId;
@@ -16,10 +19,21 @@ class RoutineScreen extends StatefulWidget {
 
 class _RoutineScreenState extends State<RoutineScreen> {
   final RoutinePresenter _routinePresenter = RoutinePresenter();
+  final ExercisePresenter _exercisePresenter = ExercisePresenter();
 
-  void _addSampleWorkout() {
+  Future<void> _addExercise() async {
+    final selected = await Navigator.push<Exercise>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ExerciseListScreen(isSelecting: true),
+      ),
+    );
+
+    // null if the user hit back without picking anything
+    if (selected == null || !mounted) return;
+
     setState(() {
-      _routinePresenter.addWorkoutToRoutine(widget.routineId, 'Sample Workout');
+      _routinePresenter.addExerciseToRoutine(widget.routineId, selected.id);
     });
   }
 
@@ -36,7 +50,7 @@ class _RoutineScreenState extends State<RoutineScreen> {
       );
     }
 
-    final workouts = routine.workoutNames;
+    final exercises = routine.exercises;
 
     return Scaffold(
       appBar: AppBar(
@@ -56,23 +70,27 @@ class _RoutineScreenState extends State<RoutineScreen> {
       ),
       body: ListView.builder(
         // One extra item at the end for the add button.
-        itemCount: workouts.length + 1,
+        itemCount: exercises.length + 1,
         itemBuilder: (context, index) {
-          if (index == workouts.length) {
+          if (index == exercises.length) {
             return Padding(
               padding: const EdgeInsets.all(16),
               child: OutlinedButton.icon(
-                onPressed: _addSampleWorkout,
+                onPressed: _addExercise,
                 icon: const Icon(Icons.add),
-                label: const Text('Add workout'),
+                label: const Text('Add exercise'),
               ),
             );
           }
 
+          final routineExercise = exercises[index];
+          final exercise = _exercisePresenter.getExerciseById(routineExercise.exerciseId);
+          final exerciseName = exercise?.name ?? 'Unknown exercise';
           return ListTile(
             leading: const Icon(Icons.fitness_center),
-            title: Text(workouts[index]),
+            title: Text(exerciseName),
           );
+
         },
       ),
     );

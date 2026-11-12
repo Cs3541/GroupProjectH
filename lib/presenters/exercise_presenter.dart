@@ -6,28 +6,22 @@ class ExercisePresenter {
     Exercise(
       id: 'bench_press',
       name: 'Bench Press',
-      sets: 3,
-      reps: 8,
-      weight: 135,
+      category: 'Strength',
     ),
     Exercise(
       id: 'squat',
       name: 'Squat',
-      sets: 3,
-      reps: 10,
-      weight: 135,
+      category: 'Strength',
     ),
     Exercise(
       id: 'running',
       name: 'Running',
-      duration: 1800,
-      distance: 5000,
+      category: 'Cardio',
     ),
     Exercise(
       id: 'plank',
       name: 'Plank',
-      sets: 3,
-      duration: 60,
+      category: 'Core',
     ),
   ];
 

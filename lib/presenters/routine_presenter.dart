@@ -1,18 +1,9 @@
+import '../models/routine_exercise_model.dart';
 import '../models/routine_model.dart';
+import 'package:uuid/uuid.dart';
 
 class RoutinePresenter {
-  static final List<Routine> _routines = [
-    Routine(
-      id: 'full_body',
-      name: 'Full Body Workout',
-      workoutNames: ['bench_press', 'squat', 'plank'],
-    ),
-    Routine(
-      id: 'cardio',
-      name: 'Cardio Routine',
-      workoutNames: ['running'],
-    ),
-  ];
+  static final List<Routine> _routines = [];
 
   List<Routine> getAllRoutines() {
     return List.unmodifiable(_routines);
@@ -21,7 +12,7 @@ class RoutinePresenter {
   Routine addRoutine(String name) {
     var id = name.trim().toLowerCase();
 
-    final routine = Routine(id: id, name: name.trim(), workoutNames: []);
+    final routine = Routine(id: id, name: name.trim(), exercises: []);
     _routines.add(routine);
     return routine;
   }
@@ -30,8 +21,31 @@ class RoutinePresenter {
     _routines.removeWhere((routine) => routine.id == id);
   }
 
-  void addWorkoutToRoutine(String routineId, String workoutName) {
-    getRoutineById(routineId)?.workoutNames.add(workoutName);
+  RoutineExercise? addExerciseToRoutine(
+    String routineId,
+    String exerciseId, {
+    int? goalSets,
+    int? goalReps,
+    int? goalWeight,
+    double? goalDuration,
+    int? goalDistance,
+  }) {
+    final routine = getRoutineById(routineId);
+    if (routine == null) return null;
+
+    const uuid = Uuid();
+  
+    final routineExercise = RoutineExercise(
+      id: uuid.v4(),
+      exerciseId: exerciseId,
+      goalSets: goalSets,
+      goalReps: goalReps,
+      goalWeight: goalWeight,
+      goalDuration: goalDuration,
+      goalDistance: goalDistance,
+    );
+    routine.exercises.add(routineExercise);
+    return routineExercise;
   }
 
   Routine? getRoutineById(String id) {
