@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import 'app_theme.dart';
 import 'views/main_navigation.dart';
+import 'views/login_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -50,10 +52,14 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(const Duration(seconds: 3), () {
       if (!mounted) return;
 
+      final user = FirebaseAuth.instance.currentUser;
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => const MainNavigationScreen(),
+          builder: (context) => user == null
+              ? const LoginScreen()
+              : const MainNavigationScreen(),
         ),
       );
     });
