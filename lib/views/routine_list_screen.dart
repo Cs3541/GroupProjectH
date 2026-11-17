@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import '../models/routine_model.dart';
 import '../presenters/routine_presenter.dart';
+import '../utils/format.dart';
 import 'routine_screen.dart';
 
 class RoutineListScreen extends StatefulWidget {
@@ -44,7 +45,9 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
               ),
               title: Text(routine.name),
               subtitle: Text(
-                '${routine.exercises.length} exercises',
+                routine.days.isEmpty
+                    ? '${routine.exercises.length} exercises'
+                    : '${routine.exercises.length} exercises · ${formatWeekdays(routine.days)}',
               ),
               trailing: const Icon(Icons.chevron_right),
               onTap: () async {

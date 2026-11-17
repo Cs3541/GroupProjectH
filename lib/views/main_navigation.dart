@@ -32,7 +32,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           const LogWorkoutScreen(),
           const RoutineListScreen(),
           const ProgressScreen(),
-          ExerciseListScreen()
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -55,10 +54,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.show_chart),
             label: 'Progress',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.dns),
-            label: 'Exercises',
           ),
         ],
       ),

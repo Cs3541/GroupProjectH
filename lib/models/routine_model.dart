@@ -5,17 +5,22 @@ class Routine {
   final String name;
   final List<RoutineExercise> exercises;
 
+  // Days of the week this routine is scheduled for
+  final Set<int> days;
+
   Routine({
     required this.id,
     required this.name,
     required this.exercises,
-  });
+    Set<int>? days,
+  }) : days = days ?? {};
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
       'name': name,
       'exercises': exercises.map((exercise) => exercise.toMap()).toList(),
+      'days': days.toList()..sort(),
     };
   }
 
@@ -26,7 +31,7 @@ class Routine {
       exercises: (map['exercises'] as List)
           .map((exercise) => RoutineExercise.fromMap(exercise))
           .toList(),
+      days: (map['days'] as List).cast<int>().toSet(),
     );
   }
-  
 }

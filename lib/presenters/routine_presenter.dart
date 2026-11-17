@@ -48,6 +48,24 @@ class RoutinePresenter {
     return routineExercise;
   }
 
+  void setRoutineDays(String routineId, Set<int> days) {
+    final routine = getRoutineById(routineId);
+    if (routine == null) return;
+    routine.days.clear();
+    routine.days.addAll(days);
+  }
+
+  List<Routine> getRoutinesForDay(int weekday) {
+    List<Routine> matchingRoutines = [];
+
+    for (Routine routine in _routines) {
+      if (routine.days.contains(weekday)) {
+        matchingRoutines.add(routine);
+      }
+    }
+    return matchingRoutines;
+  }
+
   Routine? getRoutineById(String id) {
     for (final routine in _routines) {
       if (routine.id == id) {
