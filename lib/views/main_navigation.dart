@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get_fit/models/exercise_model.dart';
 import '../home_screen.dart';
 import 'log_workout_screen.dart';
 import 'routine_list_screen.dart';
 import 'progress_screen.dart';
+import 'exercise_list_screen.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});
