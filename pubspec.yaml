@@ -18,6 +18,10 @@ dependencies:
   pedometer: ^4.2.0
   permission_handler: ^13.0.2
 
+# permission_handler_android 14.x requires AGP 9 built-in Kotlin, which this
+# project disables (android.builtInKotlin=false). Pin to the last compatible version.
+dependency_overrides:
+  permission_handler_android: 13.0.1
 
 dev_dependencies:
   flutter_test:
