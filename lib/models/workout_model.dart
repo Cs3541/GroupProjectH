@@ -3,7 +3,9 @@ class WorkoutSet {
   final int reps;
   final double weight;
 
-  const WorkoutSet({required this.reps, required this.weight});
+  final double? rpe;
+
+  const WorkoutSet({required this.reps, required this.weight, this.rpe});
 
   double get volume => reps * weight;
 }
@@ -18,16 +20,18 @@ class ExerciseEntry {
   double get volume => sets.fold(0, (sum, s) => sum + s.volume);
 }
 
-// singled workout seshion that got logged
 class Workout {
   final String name;
   final DateTime date;
   final List<ExerciseEntry> exercises;
 
+  final Duration duration;
+
   const Workout({
     required this.name,
     required this.date,
     this.exercises = const [],
+    this.duration = Duration.zero,
   });
 
   double get totalVolume => exercises.fold(0, (sum, e) => sum + e.volume);

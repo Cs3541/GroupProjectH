@@ -1,43 +1,18 @@
 import 'package:flutter/material.dart';
 import '../app_theme.dart';
-import '../models/workout_model.dart';
+import '../presenters/active_workout_presenter.dart';
 import '../presenters/workout_presenter.dart';
 import '../utils/format.dart';
+import '../utils/workout_format.dart';
+import 'start_workout_sheet.dart';
 
-// SKELETON for the workout logging branch.
-//
-// Lists logged workouts and has a placeholder button that adds a fake workout that tests the home and progress tabs.
-// to do for dewa: replace the FAB with a real form (pick exercise, add
-// sets/reps/weight, choose a date, optionally start from a routine)
 class LogWorkoutScreen extends StatelessWidget {
   const LogWorkoutScreen({super.key});
-
-  void _addSampleWorkout() {
-    final presenter = WorkoutPresenter.instance;
-    final n = presenter.workouts.length;
-    final weight = 60 + n * 2.5;
-
-    presenter.addWorkout(
-      Workout(
-        name: 'Sample workout',
-        date: DateTime.now(),
-        exercises: [
-          ExerciseEntry(
-            name: 'Bench Press',
-            sets: [
-              WorkoutSet(reps: 8, weight: weight),
-              WorkoutSet(reps: 8, weight: weight),
-              WorkoutSet(reps: 6, weight: weight + 2.5),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     final presenter = WorkoutPresenter.instance;
+    final active = ActiveWorkoutPresenter.instance;
 
     return Scaffold(
       appBar: AppBar(
@@ -51,38 +26,84 @@ class LogWorkoutScreen extends StatelessWidget {
         ],
       ),
       body: ListenableBuilder(
-        listenable: presenter,
+        listenable: Listenable.merge([presenter, active]),
         builder: (context, _) {
           final workouts = presenter.workouts.reversed.toList();
 
-          if (workouts.isEmpty) {
-            return const Center(
-              child: Text(
-                'No workouts logged yet.\nTap + to add one.',
-                textAlign: TextAlign.center,
+          return Column(
+            children: [
+              if (active.hasActiveWorkout)
+                _InProgressBanner(presenter: active),
+              Expanded(
+                child: workouts.isEmpty
+                    ? const Center(
+                        child: Text(
+                          'No workouts logged yet.\nTap "Start workout" to begin.',
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    : ListView.builder(
+                        itemCount: workouts.length,
+                        itemBuilder: (context, index) {
+                          final w = workouts[index];
+                          final duration = w.duration.inSeconds > 0
+                              ? ' • ${formatDuration(w.duration)}'
+                              : '';
+                          return ListTile(
+                            leading: const Icon(Icons.fitness_center),
+                            title: Text(w.name),
+                            subtitle: Text(
+                              '${shortDate(w.date)} • ${w.exercises.length} exercise(s) '
+                              '• volume ${compactNumber(w.totalVolume)}$duration',
+                            ),
+                          );
+                        },
+                      ),
               ),
-            );
-          }
-
-          return ListView.builder(
-            itemCount: workouts.length,
-            itemBuilder: (context, index) {
-              final w = workouts[index];
-              return ListTile(
-                leading: const Icon(Icons.fitness_center),
-                title: Text(w.name),
-                subtitle: Text(
-                  '${shortDate(w.date)} • ${w.exercises.length} exercise(s) '
-                  '• volume ${compactNumber(w.totalVolume)}',
-                ),
-              );
-            },
+            ],
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _addSampleWorkout, // TO DO: have sample workout open the real log form
-        child: const Icon(Icons.add),
+      floatingActionButton: ListenableBuilder(
+        listenable: active,
+        builder: (context, _) {
+          final inProgress = active.hasActiveWorkout;
+          return FloatingActionButton.extended(
+            onPressed: () => inProgress
+                ? openActiveWorkout(context)
+                : startWorkoutFlow(context),
+            icon: Icon(inProgress ? Icons.play_arrow : Icons.add),
+            label: Text(inProgress ? 'Continue workout' : 'Start workout'),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _InProgressBanner extends StatelessWidget {
+  final ActiveWorkoutPresenter presenter;
+  const _InProgressBanner({required this.presenter});
+
+  @override
+  Widget build(BuildContext context) {
+    final workout = presenter.active;
+    if (workout == null) return const SizedBox.shrink();
+
+    return Card(
+      margin: const EdgeInsets.fromLTRB(12, 12, 12, 4),
+      child: ListTile(
+        leading: const Icon(Icons.timer),
+        title: Text('${workout.name} in progress'),
+        subtitle: ValueListenableBuilder<Duration>(
+          valueListenable: presenter.elapsed,
+          builder: (_, elapsed, __) => Text(
+            '${formatDuration(elapsed)} • '
+            '${workout.completedSets}/${workout.totalSets} sets done',
+          ),
+        ),
+        trailing: const Icon(Icons.chevron_right),
+        onTap: () => openActiveWorkout(context),
       ),
     );
   }
