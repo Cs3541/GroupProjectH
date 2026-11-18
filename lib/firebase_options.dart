@@ -64,7 +64,6 @@ class DefaultFirebaseOptions {
     storageBucket: 'cs3541-grouphproject.firebasestorage.app',
     iosBundleId: 'com.example.getFit',
   );
-
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyBNoiqVjKukFLkYlPJtDUkh5oh364wTkAg',
     appId: '1:971071177789:ios:bbbb5288b8aca0d6985654',
