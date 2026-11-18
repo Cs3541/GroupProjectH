@@ -3,6 +3,7 @@ import 'app_theme.dart';
 import 'presenters/routine_presenter.dart';
 import 'presenters/workout_presenter.dart';
 import 'presenters/step_presenter.dart';
+import 'widgets/weekly_calendar.dart';
 
 class HomeScreen extends StatelessWidget {
   final ValueChanged<int> onNavigate;
@@ -61,6 +62,11 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ],
                   ),
+
+                  const SizedBox(height: 20),
+
+                  // Weekly calendar
+                  WeeklyCalendar(workouts: workouts),
 
                   const SizedBox(height: 20),
 
