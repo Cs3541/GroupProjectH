@@ -17,13 +17,10 @@ class LogWorkoutScreen extends StatelessWidget {
     final n = presenter.workouts.length;
     final weight = 60 + n * 2.5;
 
-    // Spread test workouts over time until they land on today. This should be temporary
-    final daysAgo = (10 - n).clamp(0, 10) * 2;
-
     presenter.addWorkout(
       Workout(
         name: 'Sample workout',
-        date: DateTime.now().subtract(Duration(days: daysAgo)),
+        date: DateTime.now(),
         exercises: [
           ExerciseEntry(
             name: 'Bench Press',
